@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloxd.io Sidebar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: bold;
+            border: 3px solid #fff;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .profile-level {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .sidebar-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 3px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #ccc;
+            text-decoration: none;
+        }
+
+        .menu-item:hover {
+            background: rgba(102, 126, 234, 0.25);
+            border-left-color: #667eea;
+            color: #fff;
+            transform: translateX(5px);
+        }
+
+        .menu-item.active {
+            background: rgba(102, 126, 234, 0.4);
+            border-left-color: #667eea;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .menu-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-label {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .badge {
+            background: #ff6b6b;
+            color: white;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .game-modes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .mode-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .mode-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .stats-box {
+            background: rgba(102, 126, 234, 0.15);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 13px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #aaa;
+        }
+
+        .stat-value {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+
+        .content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            .content {
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            }
+
+            .content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <!-- Profile Section -->
+        <div class="sidebar-header">
+            <div class="profile-avatar">👨‍💻</div>
+            <div class="profile-name">PlayerName</div>
+            <div class="profile-level">Level 42 • Rank: Elite</div>
+        </div>
+
+        <!-- Game Modes Section -->
+        <div class="sidebar-section">
+            <div class="section-title">Game Modes</div>
+            <div class="game-modes">
+                <button class="mode-button">BloxdHop</button>
+                <button class="mode-button">DoodleCube</button>
+                <button class="mode-button">EvilTower</button>
+                <button class="mode-button">Peaceful</button>
+            </div>
+        </div>
+
+        <!-- Main Menu -->
+        <div class="sidebar-section">
+            <div class="section-title">Menu</div>
+            <a class="menu-item active">
+                <div class="menu-icon">🏠</div>
+                <div class="menu-label">Home</div>
+            </a>
+            <a class="menu-item">
+                <div class="menu-icon">👥</div>
+                <div class="menu-label">Friends</div>
+                <div class="badge">3</div>
+            </a>
+            <a class="menu-item">
+                <div class="menu-icon">🏆</div>
+                <div class="menu-label">Leaderboard</div>
+            </a>
+            <a class="menu-item">
+                <div class="menu-icon">🛍️</div>
+                <div class="menu-label">Shop</div>
+            </a>
+            <a class="menu-item">
+                <div class="menu-icon">⚙️</div>
+                <div class="menu-label">Settings</div>
+            </a>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="sidebar-section">
+            <div class="section-title">Your Stats</div>
+            <div class="stats-box">
+                <div class="stat-row">
+                    <span class="stat-label">Coins</span>
+                    <span class="stat-value">5,420</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Gems</span>
+                    <span class="stat-value">240</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Wins</span>
+                    <span class="stat-value">87</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Played</span>
+                    <span class="stat-value">342</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Menu -->
+        <div class="sidebar-section">
+            <div class="section-title">Other</div>
+            <a class="menu-item">
+                <div class="menu-icon">📰</div>
+                <div class="menu-label">News</div>
+            </a>
+            <a class="menu-item">
+                <div class="menu-icon">❓</div>
+                <div class="menu-label">Help</div>
+            </a>
+        </div>
+
+        <!-- Logout Button -->
+        <button class="logout-btn">Log Out</button>
+    </div>
+
+    <div class="content">
+        <h1>Welcome to Bloxd.io</h1>
+        <p>Select a game mode or navigate using the sidebar to get started!</p>
+    </div>
+
+    <script>
+        // Simple menu item active state
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
