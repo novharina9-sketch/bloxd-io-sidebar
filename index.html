@@ -12,10 +12,11 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
+            overflow: hidden;
         }
 
         .sidebar {
@@ -24,11 +25,25 @@
             color: #fff;
             padding: 20px;
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-            overflow-y: auto;
             height: 100vh;
             position: fixed;
             left: 0;
             top: 0;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.5);
+            border-radius: 3px;
         }
 
         .sidebar-header {
@@ -88,6 +103,11 @@
             transition: all 0.3s ease;
             color: #ccc;
             text-decoration: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-size: 14px;
+            font-family: inherit;
         }
 
         .menu-item:hover {
@@ -112,6 +132,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         .menu-label {
@@ -127,6 +148,7 @@
             font-size: 11px;
             font-weight: bold;
             margin-left: 8px;
+            flex-shrink: 0;
         }
 
         .game-modes {
@@ -146,11 +168,16 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: bold;
+            font-family: inherit;
         }
 
         .mode-button:hover {
             transform: scale(1.05);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .mode-button:active {
+            transform: scale(0.98);
         }
 
         .stats-box {
@@ -166,6 +193,10 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 8px;
+        }
+
+        .stat-row:last-child {
+            margin-bottom: 0;
         }
 
         .stat-label {
@@ -188,6 +219,8 @@
             font-weight: bold;
             margin-top: 20px;
             transition: all 0.3s ease;
+            font-family: inherit;
+            font-size: 14px;
         }
 
         .logout-btn:hover {
@@ -195,10 +228,27 @@
             box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
         }
 
+        .logout-btn:active {
+            transform: translateY(0);
+        }
+
         .content {
             flex: 1;
             margin-left: 280px;
             padding: 40px;
+            overflow-y: auto;
+            color: white;
+        }
+
+        .content h1 {
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+
+        .content p {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.6;
         }
 
         @media (max-width: 768px) {
@@ -208,6 +258,7 @@
 
             .content {
                 margin-left: 220px;
+                padding: 20px;
             }
         }
 
@@ -221,6 +272,11 @@
 
             .content {
                 margin-left: 0;
+                padding: 15px;
+            }
+
+            .game-modes {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -238,37 +294,37 @@
         <div class="sidebar-section">
             <div class="section-title">Game Modes</div>
             <div class="game-modes">
-                <button class="mode-button">BloxdHop</button>
-                <button class="mode-button">DoodleCube</button>
-                <button class="mode-button">EvilTower</button>
-                <button class="mode-button">Peaceful</button>
+                <button class="mode-button" onclick="playMode('BloxdHop')">BloxdHop</button>
+                <button class="mode-button" onclick="playMode('DoodleCube')">DoodleCube</button>
+                <button class="mode-button" onclick="playMode('EvilTower')">EvilTower</button>
+                <button class="mode-button" onclick="playMode('Peaceful')">Peaceful</button>
             </div>
         </div>
 
         <!-- Main Menu -->
         <div class="sidebar-section">
             <div class="section-title">Menu</div>
-            <a class="menu-item active">
+            <button class="menu-item active" onclick="switchMenu(this, 'Home')">
                 <div class="menu-icon">🏠</div>
                 <div class="menu-label">Home</div>
-            </a>
-            <a class="menu-item">
+            </button>
+            <button class="menu-item" onclick="switchMenu(this, 'Friends')">
                 <div class="menu-icon">👥</div>
                 <div class="menu-label">Friends</div>
                 <div class="badge">3</div>
-            </a>
-            <a class="menu-item">
+            </button>
+            <button class="menu-item" onclick="switchMenu(this, 'Leaderboard')">
                 <div class="menu-icon">🏆</div>
                 <div class="menu-label">Leaderboard</div>
-            </a>
-            <a class="menu-item">
+            </button>
+            <button class="menu-item" onclick="switchMenu(this, 'Shop')">
                 <div class="menu-icon">🛍️</div>
                 <div class="menu-label">Shop</div>
-            </a>
-            <a class="menu-item">
+            </button>
+            <button class="menu-item" onclick="switchMenu(this, 'Settings')">
                 <div class="menu-icon">⚙️</div>
                 <div class="menu-label">Settings</div>
-            </a>
+            </button>
         </div>
 
         <!-- Stats Section -->
@@ -297,18 +353,18 @@
         <!-- Additional Menu -->
         <div class="sidebar-section">
             <div class="section-title">Other</div>
-            <a class="menu-item">
+            <button class="menu-item" onclick="switchMenu(this, 'News')">
                 <div class="menu-icon">📰</div>
                 <div class="menu-label">News</div>
-            </a>
-            <a class="menu-item">
+            </button>
+            <button class="menu-item" onclick="switchMenu(this, 'Help')">
                 <div class="menu-icon">❓</div>
                 <div class="menu-label">Help</div>
-            </a>
+            </button>
         </div>
 
         <!-- Logout Button -->
-        <button class="logout-btn">Log Out</button>
+        <button class="logout-btn" onclick="logout()">Log Out</button>
     </div>
 
     <div class="content">
@@ -317,13 +373,31 @@
     </div>
 
     <script>
-        // Simple menu item active state
-        document.querySelectorAll('.menu-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-                this.classList.add('active');
+        function switchMenu(element, page) {
+            // Remove active class from all menu items
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
             });
-        });
+            // Add active class to clicked item
+            element.classList.add('active');
+            // Update content
+            updateContent(page);
+        }
+
+        function playMode(mode) {
+            alert('Starting ' + mode + '! 🎮');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to log out?')) {
+                alert('Logging out... See you soon! 👋');
+            }
+        }
+
+        function updateContent(page) {
+            const content = document.querySelector('.content');
+            content.innerHTML = '<h1>' + page + '</h1><p>Welcome to the ' + page + ' section!</p>';
+        }
     </script>
 </body>
 </html>
